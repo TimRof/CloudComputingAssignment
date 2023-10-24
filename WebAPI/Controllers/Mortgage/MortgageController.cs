@@ -1,4 +1,5 @@
-﻿using Entities.Models.Mortgage;
+﻿using Entities.Models.Listing;
+using Entities.Models.Mortgage;
 using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.Mortgage;
 
@@ -17,23 +18,20 @@ namespace WebAPI.Controllers.User
             _mortgageOfferService = mortgageOfferService ?? throw new ArgumentNullException(nameof(mortgageOfferService));
         }
 
-        public IActionResult ViewMortgageOffer(Guid id)
+        [HttpPost]
+        public IActionResult GetMortgageOffer(Guid id)
         {
             // View a mortgage offer if the token is valid and has not expired
             var mortgageOffer = _mortgageOfferService.Get(id);
 
             if (mortgageOffer != null && mortgageOffer.ExpiryTime < DateTime.Now)
             {
-                // Display the mortgage offer to the client
-                // return View("MortgageOfferView", mortgageOffer);
+                return Ok(mortgageOffer);
             }
             else
             {
-                // Token is invalid or has expired, display an error message
-                // return View("TokenExpired");
+                return StatusCode(410, "Offer has expired");
             }
-
-            throw new NotImplementedException();
         }
 
     }
