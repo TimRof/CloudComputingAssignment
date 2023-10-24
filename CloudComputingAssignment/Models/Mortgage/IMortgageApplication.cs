@@ -11,8 +11,6 @@ namespace Entities.Models.Mortgage
 
         public decimal MonthlyIncome { get; set; }
 
-        public decimal LoanAmount { get; set; }
-
         public MortgageApplicationStatus Status { get; set; }
 
         public DateTime ApplicationSent { get; set; }

@@ -5,9 +5,9 @@ namespace ServiceLayer.Mortgage
 {
     public class MortgageApplicationService : IMortgageApplicationService<MortgageApplication>
     {
-        private readonly IMortgageApplicationRepository _repository;
+        private readonly IMortgageRepository _repository;
 
-        public MortgageApplicationService(IMortgageApplicationRepository repository)
+        public MortgageApplicationService(IMortgageRepository repository)
         {
             _repository = repository;
         }
@@ -32,6 +32,7 @@ namespace ServiceLayer.Mortgage
         {
             return _repository.GetApplicationByUserId(userId);
         }
+
         public void SetApplicationStatus(Guid id, MortgageApplicationStatus status)
         {
             _repository.SetApplicationStatus(id, status);

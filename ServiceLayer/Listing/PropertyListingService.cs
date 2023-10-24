@@ -30,8 +30,6 @@ namespace ServiceLayer.Listing
 
         public IEnumerable<PropertyListing> GetAllByPriceRange(PriceRange priceRange, int page = 1, int pageSize = 10)
         {
-            int skip = (page - 1) * pageSize;
-
             return _repository.GetAllByPriceRange(priceRange, page, pageSize);
         }
     }

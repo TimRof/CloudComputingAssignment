@@ -5,6 +5,7 @@ namespace Entities.Models.Mortgage
 {
     public enum MortgageApplicationStatus
     {
+        Processing,
         Pending,
         Accepted,
         Rejected,
@@ -13,20 +14,11 @@ namespace Entities.Models.Mortgage
     public class MortgageApplication : IMortgageApplication
     {
         public Guid Id { get; set; } = EntityBaseExtensions.GenerateId();
-
         public IUser Applicant { get; set; }
-
         public IListing Listing { get; set; }
-
         public decimal MonthlyIncome { get; set; }
-
-        public decimal LoanAmount { get; set; }
-
-        public MortgageApplicationStatus Status { get; set; }
-
-        public DateTime ApplicationSent { get; set; }
-
-        public MortgageApplication()
-        { }
+        public MortgageApplicationStatus Status { get; set; } = MortgageApplicationStatus.Processing;
+        public DateTime ApplicationSent { get; set; } = DateTime.Now;
+        public MortgageApplication() { }
     }
 }

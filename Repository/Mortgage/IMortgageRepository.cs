@@ -9,9 +9,13 @@ using System.Threading.Tasks;
 
 namespace Repository.Mortgage
 {
-    public interface IMortgageApplicationRepository : IBaseRepository<MortgageApplicationContext, MortgageApplication>
+    public interface IMortgageRepository : IBaseRepository<MortgageContext, MortgageApplication>
     {
         public MortgageApplication GetApplicationByUserId(Guid userId);
         public void SetApplicationStatus(Guid userId, MortgageApplicationStatus status);
+        public void AddMortgageOffer(MortgageOffer offer);
+        public MortgageOffer GetMortgageOfferById(Guid id);
+        public MortgageOffer GetMortgageOfferByApplicationId(Guid applicationId);
+        public MortgageOffer GetMortgageOfferByUserId(Guid applicationId);
     }
 }

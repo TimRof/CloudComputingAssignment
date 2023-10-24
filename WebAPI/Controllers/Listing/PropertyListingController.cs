@@ -74,5 +74,9 @@ namespace WebAPI.Controllers.Listing
 
             return CreatedAtAction(nameof(GetListing), new { id = listing.Id }, null);
         }
+
+        // add images to listing and save to blob storage
+
+
     }
 }

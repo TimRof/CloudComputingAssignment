@@ -2,6 +2,7 @@ using Entities.Models.Listing;
 using Entities.Models.Mortgage;
 using Entities.Models.User;
 using Repository;
+using Repository.Mortgage;
 using ServiceLayer.Listing;
 using ServiceLayer.Mortgage;
 using ServiceLayer.User;
@@ -27,7 +28,8 @@ builder.Services.AddScoped<IListingService<PropertyListing>, PropertyListingServ
 builder.Services.AddScoped<IPropertyListingRepository, PropertyListingRepository>();
 
 builder.Services.AddScoped<IMortgageApplicationService<MortgageApplication>, MortgageApplicationService>();
-//builder.Services.AddScoped<IMortgageApplicationRepository, MortgageApplicationRepository>();
+builder.Services.AddScoped<IMortgageOfferService<MortgageOffer>, MortgageOfferService>();
+builder.Services.AddScoped<IMortgageRepository, MortgageRepository>();
 
 var app = builder.Build();
 

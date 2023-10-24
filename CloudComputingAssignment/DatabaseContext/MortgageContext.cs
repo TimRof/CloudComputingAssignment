@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Repository.DatabaseContext
 {
-    public class MortgageApplicationContext : DbContext
+    public class MortgageContext : DbContext
     {
-        public MortgageApplicationContext(DbContextOptions<MortgageApplicationContext> options)
+        public MortgageContext(DbContextOptions<MortgageContext> options)
        : base(options)
         {
         }
@@ -15,6 +15,7 @@ namespace Repository.DatabaseContext
             //modelBuilder.ApplyConfiguration(new ClientConfiguration());
         }
 
-        public DbSet<MortgageApplication> MortgageApplication { get; set; }
+        public DbSet<MortgageApplication> MortgageApplications { get; set; }
+        public DbSet<MortgageOffer> MortgageOffers { get; set; }
     }
 }

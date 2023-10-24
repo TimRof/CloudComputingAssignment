@@ -67,7 +67,6 @@ namespace Repository
 
         public virtual void Add(T entity)
         {
-            EntityEntry dbEntityEntry = _context.Entry<T>(entity);
             _context.Set<T>().Add(entity);
         }
 

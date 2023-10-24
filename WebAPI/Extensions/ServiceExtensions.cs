@@ -12,7 +12,7 @@ namespace WebAPI.Extensions
             services.AddDbContext<ListingContext>(opts =>
                 opts.UseSqlServer(configuration.GetConnectionString("ListingDatabaseConnection"), b => b.MigrationsAssembly("Repository")));
         public static void ConfigureMortgageApplicationContext(this IServiceCollection services, IConfiguration configuration) =>
-            services.AddDbContext<MortgageApplicationContext>(opts =>
+            services.AddDbContext<MortgageContext>(opts =>
                 opts.UseSqlServer(configuration.GetConnectionString("MortgageApplicationDatabaseConnection"), b => b.MigrationsAssembly("Repository")));
     }
 }
