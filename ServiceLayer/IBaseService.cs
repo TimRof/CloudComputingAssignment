@@ -1,4 +1,4 @@
-﻿using Models;
+﻿using Entities.Models;
 
 namespace ServiceLayer
 {
@@ -8,6 +8,6 @@ namespace ServiceLayer
 
         IEnumerable<T> GetAll(int page, int pageSize);
 
-        void Add(T listing);
+        void Add(T entity);
     }
 }
