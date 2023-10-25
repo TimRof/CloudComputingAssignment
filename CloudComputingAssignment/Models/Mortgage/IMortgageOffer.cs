@@ -12,5 +12,6 @@ namespace Entities.Models.Mortgage
         public decimal LoanAmount { get; set; }
         public double InterestRate { get; set; }
         public DateTime ExpiryTime { get; set; }
+        public MortgageStatus Status { get; set; }
     }
 }

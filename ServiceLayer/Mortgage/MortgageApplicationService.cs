@@ -33,7 +33,7 @@ namespace ServiceLayer.Mortgage
             return _repository.GetApplicationByUserId(userId);
         }
 
-        public void SetApplicationStatus(Guid id, MortgageApplicationStatus status)
+        public void SetApplicationStatus(Guid id, MortgageStatus status)
         {
             _repository.SetApplicationStatus(id, status);
             _repository.Commit();

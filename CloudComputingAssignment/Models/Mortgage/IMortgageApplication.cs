@@ -5,13 +5,13 @@ namespace Entities.Models.Mortgage
 {
     public interface IMortgageApplication : IEntityBase
     {
-        public IUser Applicant { get; set; }
+        public Guid ApplicantId { get; set; }
 
-        public IListing Listing { get; set; }
+        public Guid ListingId { get; set; }
 
         public decimal MonthlyIncome { get; set; }
 
-        public MortgageApplicationStatus Status { get; set; }
+        public MortgageStatus Status { get; set; }
 
         public DateTime ApplicationSent { get; set; }
     }

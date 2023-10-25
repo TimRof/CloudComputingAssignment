@@ -21,7 +21,7 @@ namespace Repository
 
             return _context.Set<T>().AsEnumerable()
                 .Skip(skip)
-                .Take(pageSize); ;
+                .Take(pageSize);
         }
 
         public virtual int Count()

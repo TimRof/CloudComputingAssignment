@@ -24,7 +24,7 @@ namespace Repository.Mortgage
 
         public MortgageApplication GetApplicationByUserId(Guid userId)
         {
-            return _context.MortgageApplications.FirstOrDefault(app => app.Applicant.Id == userId);
+            return _context.MortgageApplications.FirstOrDefault(app => app.ApplicantId == userId);
         }
 
         public MortgageOffer GetMortgageOfferByApplicationId(Guid applicationId)
@@ -37,12 +37,12 @@ namespace Repository.Mortgage
             return _context.MortgageOffers.FirstOrDefault(offer => offer.Id == token);
         }
 
-        public MortgageOffer GetMortgageOfferByUserId(Guid applicationId)
+        public IEnumerable<MortgageOffer> GetMortgageOffersByUserId(Guid applicationId)
         {
-            return _context.MortgageOffers.FirstOrDefault(offer => offer.Application.Applicant.Id == applicationId);
+            return _context.MortgageOffers.Where(offer => offer.Application.ApplicantId == applicationId).AsEnumerable();
         }
 
-        public void SetApplicationStatus(Guid id, MortgageApplicationStatus status)
+        public void SetApplicationStatus(Guid id, MortgageStatus status)
         {
             _context.MortgageApplications.FirstOrDefault(app => app.Id == id).Status = status;
         }

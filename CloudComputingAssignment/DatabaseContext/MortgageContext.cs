@@ -1,4 +1,5 @@
 ﻿using Entities.Models.Mortgage;
+using Entities.Models.User;
 using Microsoft.EntityFrameworkCore;
 
 namespace Repository.DatabaseContext

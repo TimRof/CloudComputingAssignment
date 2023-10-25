@@ -18,10 +18,10 @@ namespace WebAPI.Controllers.User
             _mortgageOfferService = mortgageOfferService ?? throw new ArgumentNullException(nameof(mortgageOfferService));
         }
 
-        [HttpPost]
+        [HttpGet("{id:guid}")]
         public IActionResult GetMortgageOffer(Guid id)
         {
-            // View a mortgage offer if the token is valid and has not expired
+            // Get a mortgage offer if the token is valid and has not expired
             var mortgageOffer = _mortgageOfferService.Get(id);
 
             if (mortgageOffer != null && mortgageOffer.ExpiryTime < DateTime.Now)
