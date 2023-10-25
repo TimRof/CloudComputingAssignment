@@ -1,4 +1,5 @@
-﻿using Entities.Models.Listing;
+﻿using Entities.Configuration;
+using Entities.Models.Listing;
 using Microsoft.EntityFrameworkCore;
 
 namespace Repository.DatabaseContext
@@ -12,9 +13,9 @@ namespace Repository.DatabaseContext
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // modelBuilder.ApplyConfiguration(new ListingConfiguration());
+            modelBuilder.ApplyConfiguration(new PropertyListingConfiguration());
         }
 
-        public DbSet<PropertyListing> Listings { get; set; }
+        public DbSet<PropertyListing> PropertyListings { get; set; }
     }
 }

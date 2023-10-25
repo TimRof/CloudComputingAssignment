@@ -15,12 +15,24 @@ namespace Entities.Configuration
         {
             builder.HasData
             (
-               new Customer
-               {
-                   Name = "Test Name",
-                   Email = "test@example.com",
-                   MonthlyIncome = 1000
-               }
+                new Customer
+                {
+                    Name = "Test Name 1",
+                    Email = "test1@example.com",
+                    MonthlyIncome = 1000
+                },
+                new Customer
+                {
+                    Name = "Test Name 2",
+                    Email = "test2@example.com",
+                    MonthlyIncome = 2000
+                },
+                new Customer
+                {
+                    Name = "Test Name 3",
+                    Email = "test3@example.com",
+                    MonthlyIncome = 3000
+                }
             );
         }
     }

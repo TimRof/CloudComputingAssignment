@@ -27,9 +27,9 @@ namespace ServiceLayer.Mortgage
             return _repository.GetMortgageOfferByApplicationId(id);
         }
 
-        public MortgageOffer GetMortgageOfferByUserId(Guid id)
+        public IEnumerable<MortgageOffer> GetMortgageOffersByUserId(Guid id)
         {
-            return _repository.GetMortgageOfferByUserId(id);
+            return _repository.GetMortgageOffersByUserId(id);
         }
 
         public MortgageOffer Get(Guid id)

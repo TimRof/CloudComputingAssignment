@@ -1,6 +1,7 @@
 ﻿using Entities.Models.General;
 using Entities.Models.Listing;
 using Microsoft.AspNetCore.Mvc;
+using ServiceLayer.Blob;
 using ServiceLayer.Listing;
 
 namespace WebAPI.Controllers.Listing
@@ -10,10 +11,13 @@ namespace WebAPI.Controllers.Listing
     public class PropertyListingController : ControllerBase
     {
         private readonly IListingService<PropertyListing> _listingService;
+        private readonly IBlobService _blobService;
 
-        public PropertyListingController(IListingService<PropertyListing> listingService)
+        public PropertyListingController(IListingService<PropertyListing> listingService, IBlobService blobService)
         {
             _listingService = listingService ?? throw new ArgumentNullException(nameof(listingService));
+            _blobService = blobService ?? throw new ArgumentNullException(nameof(blobService));
+            _blobService = blobService;
         }
 
         [HttpGet]
@@ -58,7 +62,7 @@ namespace WebAPI.Controllers.Listing
         }
 
         [HttpPost]
-        public IActionResult AddListing([FromBody] PropertyListing listing)
+        public IActionResult AddListing([FromBody] PropertyListing listing, string? imagePath)
         {
             if (listing == null)
             {
@@ -70,13 +74,23 @@ namespace WebAPI.Controllers.Listing
                 return BadRequest(ModelState);
             }
 
+            if (!String.IsNullOrEmpty(imagePath))
+            {
+                string imageName = Guid.NewGuid().ToString();
+                string fileExtension = Path.GetExtension(imagePath);
+
+                _blobService.UploadFileBlobAsync(imagePath, imageName + fileExtension);
+
+                listing.ImageName = imageName;
+            }
+            else
+            {
+                listing.ImageName = "default.png";
+            }
+
             _listingService.Add(listing);
 
             return CreatedAtAction(nameof(GetListing), new { id = listing.Id }, null);
         }
-
-        // add images to listing and save to blob storage
-
-
     }
 }

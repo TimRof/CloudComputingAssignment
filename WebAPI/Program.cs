@@ -1,8 +1,10 @@
+using Azure.Storage.Blobs;
 using Entities.Models.Listing;
 using Entities.Models.Mortgage;
 using Entities.Models.User;
 using Repository;
 using Repository.Mortgage;
+using ServiceLayer.Blob;
 using ServiceLayer.Listing;
 using ServiceLayer.Mortgage;
 using ServiceLayer.User;
@@ -20,6 +22,9 @@ builder.Services.AddSwaggerGen();
 ServiceExtensions.ConfigureListingContext(builder.Services, builder.Configuration);
 ServiceExtensions.ConfigureUserContext(builder.Services, builder.Configuration);
 ServiceExtensions.ConfigureMortgageApplicationContext(builder.Services, builder.Configuration);
+
+builder.Services.AddSingleton(x => new BlobServiceClient(builder.Configuration.GetConnectionString("AzureBlobStorageConnection")));
+builder.Services.AddSingleton<IBlobService, BlobService>();
 
 builder.Services.AddScoped<ICustomerService<Customer>, CustomerService>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
