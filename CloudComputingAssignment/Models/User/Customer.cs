@@ -11,6 +11,7 @@ namespace Entities.Models.User
 
         public string Email { get; set; }
 
+        [Range(0, double.MaxValue)]
         public decimal MonthlyIncome { get; set; }
 
         public Customer()

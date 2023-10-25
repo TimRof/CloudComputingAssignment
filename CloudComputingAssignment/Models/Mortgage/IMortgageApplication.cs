@@ -1,5 +1,4 @@
-﻿using Entities.Models.Listing;
-using Entities.Models.User;
+﻿using Entities.Models.General;
 
 namespace Entities.Models.Mortgage
 {
@@ -11,7 +10,7 @@ namespace Entities.Models.Mortgage
 
         public decimal MonthlyIncome { get; set; }
 
-        public MortgageStatus Status { get; set; }
+        public ApplicationStatus ApplicationStatus { get; set; }
 
         public DateTime ApplicationSent { get; set; }
     }

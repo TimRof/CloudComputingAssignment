@@ -1,5 +1,7 @@
-﻿using Entities.Models.Listing;
+﻿using Entities.Models.General;
+using Entities.Models.Listing;
 using Entities.Models.User;
+using System.ComponentModel.DataAnnotations;
 
 namespace Entities.Models.Mortgage
 {
@@ -8,8 +10,12 @@ namespace Entities.Models.Mortgage
         public Guid Id { get; set; } = EntityBaseExtensions.GenerateId();
         public Guid ApplicantId { get; set; }
         public Guid ListingId { get; set; }
+        
+        [Range(0, double.MaxValue)]
         public decimal MonthlyIncome { get; set; }
-        public MortgageStatus Status { get; set; } = MortgageStatus.Processing;
+
+        [EnumDataType(typeof(ApplicationStatus))]
+        public ApplicationStatus ApplicationStatus { get; set; } = ApplicationStatus.Processing;
         public DateTime ApplicationSent { get; set; } = DateTime.Now;
         public MortgageApplication() { }
     }

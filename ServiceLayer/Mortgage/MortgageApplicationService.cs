@@ -1,4 +1,5 @@
-﻿using Entities.Models.Mortgage;
+﻿using Entities.Models.General;
+using Entities.Models.Mortgage;
 using Repository.Mortgage;
 
 namespace ServiceLayer.Mortgage
@@ -33,7 +34,7 @@ namespace ServiceLayer.Mortgage
             return _repository.GetApplicationByUserId(userId);
         }
 
-        public void SetApplicationStatus(Guid id, MortgageStatus status)
+        public void SetApplicationStatus(Guid id, ApplicationStatus status)
         {
             _repository.SetApplicationStatus(id, status);
             _repository.Commit();

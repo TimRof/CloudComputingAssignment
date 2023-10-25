@@ -1,6 +1,6 @@
-﻿namespace Entities.Models.Mortgage
+﻿namespace Entities.Models.General
 {
-    public enum MortgageStatus
+    public enum ApplicationStatus
     {
         Processing,
         Pending,

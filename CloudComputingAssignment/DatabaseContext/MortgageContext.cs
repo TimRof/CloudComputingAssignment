@@ -13,7 +13,7 @@ namespace Repository.DatabaseContext
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.ApplyConfiguration(new ClientConfiguration());
+            //modelBuilder.ApplyConfiguration(new MortgageConfiguration());
         }
 
         public DbSet<MortgageApplication> MortgageApplications { get; set; }

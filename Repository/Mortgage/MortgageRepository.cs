@@ -1,4 +1,5 @@
-﻿using Entities.Models.Mortgage;
+﻿using Entities.Models.General;
+using Entities.Models.Mortgage;
 using Entities.Models.User;
 using Repository.DatabaseContext;
 using System;
@@ -29,7 +30,7 @@ namespace Repository.Mortgage
 
         public MortgageOffer GetMortgageOfferByApplicationId(Guid applicationId)
         {
-            return _context.MortgageOffers.FirstOrDefault(offer => offer.Application.Id == applicationId);
+            return _context.MortgageOffers.FirstOrDefault(offer => offer.MortgageApplicationId == applicationId);
         }
 
         public MortgageOffer GetMortgageOfferById(Guid token)
@@ -37,14 +38,16 @@ namespace Repository.Mortgage
             return _context.MortgageOffers.FirstOrDefault(offer => offer.Id == token);
         }
 
-        public IEnumerable<MortgageOffer> GetMortgageOffersByUserId(Guid applicationId)
+        public IEnumerable<MortgageOffer> GetMortgageOffersByUserId(Guid userId)
         {
-            return _context.MortgageOffers.Where(offer => offer.Application.ApplicantId == applicationId).AsEnumerable();
+            return _context.MortgageOffers
+            .Where(offer => offer.MortgageApplicationId == GetApplicationByUserId(userId).Id)
+            .AsEnumerable();
         }
 
-        public void SetApplicationStatus(Guid id, MortgageStatus status)
+        public void SetApplicationStatus(Guid id, ApplicationStatus status)
         {
-            _context.MortgageApplications.FirstOrDefault(app => app.Id == id).Status = status;
+            _context.MortgageApplications.FirstOrDefault(app => app.Id == id).ApplicationStatus = status;
         }
     }
 }

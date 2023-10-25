@@ -1,4 +1,5 @@
-﻿using Entities.Models.Mortgage;
+﻿using Entities.Models.General;
+using Entities.Models.Mortgage;
 using Entities.Models.User;
 using Repository.DatabaseContext;
 using System;
@@ -12,10 +13,10 @@ namespace Repository.Mortgage
     public interface IMortgageRepository : IBaseRepository<MortgageContext, MortgageApplication>
     {
         public MortgageApplication GetApplicationByUserId(Guid userId);
-        public void SetApplicationStatus(Guid userId, MortgageStatus status);
+        public void SetApplicationStatus(Guid userId, ApplicationStatus status);
         public void AddMortgageOffer(MortgageOffer offer);
         public MortgageOffer GetMortgageOfferById(Guid id);
         public MortgageOffer GetMortgageOfferByApplicationId(Guid applicationId);
-        public IEnumerable<MortgageOffer> GetMortgageOffersByUserId(Guid applicationId);
+        public IEnumerable<MortgageOffer> GetMortgageOffersByUserId(Guid userId);
     }
 }
