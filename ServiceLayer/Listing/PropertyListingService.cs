@@ -1,6 +1,9 @@
 ﻿using Entities.Models.General;
 using Entities.Models.Listing;
 using Repository;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ServiceLayer.Listing
 {
@@ -12,25 +15,26 @@ namespace ServiceLayer.Listing
         {
             _repository = repository;
         }
-        public void Add(PropertyListing listing)
+
+        public async Task AddAsync(PropertyListing listing)
         {
-            _repository.Add(listing);
-            _repository.Commit();
+            await _repository.AddAsync(listing);
+            await _repository.CommitAsync();
         }
 
-        public PropertyListing Get(Guid id)
+        public async Task<PropertyListing> GetAsync(Guid id)
         {
-            return _repository.GetSingle(id);
+            return await _repository.GetSingleAsync(id);
         }
 
-        public IEnumerable<PropertyListing> GetAll(int page = 1, int pageSize = 10)
+        public async Task<IEnumerable<PropertyListing>> GetAllAsync(int page = 1, int pageSize = 10)
         {
-            return _repository.GetAll(page, pageSize);
+            return await _repository.GetAllAsync(page, pageSize);
         }
 
-        public IEnumerable<PropertyListing> GetAllByPriceRange(PriceRange priceRange, int page = 1, int pageSize = 10)
+        public async Task<IEnumerable<PropertyListing>> GetAllByPriceRangeAsync(PriceRange priceRange, int page = 1, int pageSize = 10)
         {
-            return _repository.GetAllByPriceRange(priceRange, page, pageSize);
+            return await _repository.GetAllByPriceRangeAsync(priceRange, page, pageSize);
         }
     }
 }

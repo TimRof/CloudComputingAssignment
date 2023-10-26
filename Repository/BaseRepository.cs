@@ -1,8 +1,11 @@
-﻿using Repository.DatabaseContext;
-using Entities.Models;
+﻿using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Repository
 {
@@ -15,86 +18,84 @@ namespace Repository
             _context = context;
         }
 
-        public virtual IEnumerable<T> GetAll(int page, int pageSize)
+        public virtual async Task<IEnumerable<T>> GetAllAsync(int page, int pageSize)
         {
             int skip = (page - 1) * pageSize;
 
-            return _context.Set<T>().AsEnumerable()
+            return await _context.Set<T>()
                 .Skip(skip)
-                .Take(pageSize);
+                .Take(pageSize)
+                .ToListAsync();
         }
 
-        public virtual int Count()
+        public virtual async Task<int> CountAsync()
         {
-            return _context.Set<T>().Count();
+            return await _context.Set<T>().CountAsync();
         }
 
-        public virtual IEnumerable<T> AllIncluding(params Expression<Func<T, object>>[] includeProperties)
-        {
-            IQueryable<T> query = _context.Set<T>();
-            foreach (var includeProperty in includeProperties)
-            {
-                query = query.Include(includeProperty);
-            }
-            return query.AsEnumerable();
-        }
-
-        public T GetSingle(Guid id)
-        {
-            return _context.Set<T>().Where(x => x.Id == id).FirstOrDefault();
-        }
-
-        public T GetSingle(Expression<Func<T, bool>> predicate)
-        {
-            return _context.Set<T>().FirstOrDefault(predicate);
-        }
-
-        public T GetSingle(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties)
+        public virtual async Task<IEnumerable<T>> AllIncludingAsync(params Expression<Func<T, object>>[] includeProperties)
         {
             IQueryable<T> query = _context.Set<T>();
             foreach (var includeProperty in includeProperties)
             {
                 query = query.Include(includeProperty);
             }
-
-            return query.Where(predicate).FirstOrDefault();
+            return await query.ToListAsync();
         }
 
-        public virtual IEnumerable<T> FindBy(Expression<Func<T, bool>> predicate)
+        public async Task<T> GetSingleAsync(Guid id)
         {
-            return _context.Set<T>().Where(predicate);
+            return await _context.Set<T>().Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
-        public virtual void Add(T entity)
+        public async Task<T> GetSingleAsync(Expression<Func<T, bool>> predicate)
         {
-            _context.Set<T>().Add(entity);
+            return await _context.Set<T>().FirstOrDefaultAsync(predicate);
+        }
+
+        public async Task<T> GetSingleAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties)
+        {
+            IQueryable<T> query = _context.Set<T>();
+            foreach (var includeProperty in includeProperties)
+            {
+                query = query.Include(includeProperty);
+            }
+
+            return await query.Where(predicate).FirstOrDefaultAsync();
+        }
+
+        public virtual async Task<IEnumerable<T>> FindByAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _context.Set<T>().Where(predicate).ToListAsync();
+        }
+
+        public virtual async Task AddAsync(T entity)
+        {
+            await _context.Set<T>().AddAsync(entity);
         }
 
         public virtual void Update(T entity)
         {
-            EntityEntry dbEntityEntry = _context.Entry<T>(entity);
-            dbEntityEntry.State = EntityState.Modified;
+            _context.Entry(entity).State = EntityState.Modified;
         }
 
         public virtual void Delete(T entity)
         {
-            EntityEntry dbEntityEntry = _context.Entry<T>(entity);
-            dbEntityEntry.State = EntityState.Deleted;
+            _context.Entry(entity).State = EntityState.Deleted;
         }
 
         public virtual void DeleteWhere(Expression<Func<T, bool>> predicate)
         {
             IEnumerable<T> entities = _context.Set<T>().Where(predicate);
-
             foreach (var entity in entities)
             {
-                _context.Entry<T>(entity).State = EntityState.Deleted;
+                _context.Entry(entity).State = EntityState.Deleted;
             }
         }
 
-        public virtual void Commit()
+        public virtual async Task CommitAsync()
         {
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

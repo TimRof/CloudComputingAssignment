@@ -2,6 +2,8 @@
 using Entities.Models.Mortgage;
 using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.Mortgage;
+using System;
+using System.Threading.Tasks;
 
 namespace WebAPI.Controllers.User
 {
@@ -19,10 +21,10 @@ namespace WebAPI.Controllers.User
         }
 
         [HttpGet("{id:guid}")]
-        public IActionResult GetMortgageOffer(Guid id)
+        public async Task<IActionResult> GetMortgageOffer(Guid id)
         {
             // Get a mortgage offer if the token is valid and has not expired
-            var mortgageOffer = _mortgageOfferService.Get(id);
+            var mortgageOffer = await _mortgageOfferService.GetAsync(id);
 
             if (mortgageOffer != null && mortgageOffer.ExpiryTime < DateTime.Now)
             {
@@ -33,6 +35,5 @@ namespace WebAPI.Controllers.User
                 return StatusCode(410, "Offer has expired");
             }
         }
-
     }
 }

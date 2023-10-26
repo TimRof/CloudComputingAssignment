@@ -1,25 +1,28 @@
 ﻿using Entities.Models;
+using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Repository
 {
     public interface IBaseRepository<TContext, T> where T : class, IEntityBase, new()
     {
-        IEnumerable<T> AllIncluding(params Expression<Func<T, object>>[] includeProperties);
+        Task<IEnumerable<T>> AllIncludingAsync(params Expression<Func<T, object>>[] includeProperties);
 
-        IEnumerable<T> GetAll(int page, int pageSize);
+        Task<IEnumerable<T>> GetAllAsync(int page, int pageSize);
 
-        int Count();
+        Task<int> CountAsync();
 
-        T GetSingle(Guid id);
+        Task<T> GetSingleAsync(Guid id);
 
-        T GetSingle(Expression<Func<T, bool>> predicate);
+        Task<T> GetSingleAsync(Expression<Func<T, bool>> predicate);
 
-        T GetSingle(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties);
+        Task<T> GetSingleAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties);
 
-        IEnumerable<T> FindBy(Expression<Func<T, bool>> predicate);
+        Task<IEnumerable<T>> FindByAsync(Expression<Func<T, bool>> predicate);
 
-        void Add(T entity);
+        Task AddAsync(T entity);
 
         void Update(T entity);
 
@@ -27,6 +30,6 @@ namespace Repository
 
         void DeleteWhere(Expression<Func<T, bool>> predicate);
 
-        void Commit();
+        Task CommitAsync();
     }
 }

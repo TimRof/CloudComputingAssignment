@@ -3,6 +3,9 @@ using Entities.Models.Listing;
 using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.Blob;
 using ServiceLayer.Listing;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace WebAPI.Controllers.Listing
 {
@@ -17,15 +20,14 @@ namespace WebAPI.Controllers.Listing
         {
             _listingService = listingService ?? throw new ArgumentNullException(nameof(listingService));
             _blobService = blobService ?? throw new ArgumentNullException(nameof(blobService));
-            _blobService = blobService;
         }
 
         [HttpGet]
-        public IActionResult GetListings([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        public async Task<IActionResult> GetListings([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             try
             {
-                var listings = _listingService.GetAll(page, pageSize);
+                var listings = await _listingService.GetAllAsync(page, pageSize);
                 return Ok(listings);
             }
             catch (Exception ex)
@@ -35,11 +37,11 @@ namespace WebAPI.Controllers.Listing
         }
 
         [HttpGet("PriceRange")]
-        public IActionResult GetListingsByPriceRange([FromQuery] PriceRange priceRange, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        public async Task<IActionResult> GetListingsByPriceRange([FromQuery] PriceRange priceRange, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             try
             {
-                var listings = _listingService.GetAllByPriceRange(priceRange, page, pageSize);
+                var listings = await _listingService.GetAllByPriceRangeAsync(priceRange, page, pageSize);
                 return Ok(listings);
             }
             catch (Exception ex)
@@ -49,9 +51,9 @@ namespace WebAPI.Controllers.Listing
         }
 
         [HttpGet("{id:guid}")]
-        public IActionResult GetListing(Guid id)
+        public async Task<IActionResult> GetListing(Guid id)
         {
-            var listing = _listingService.Get(id);
+            var listing = await _listingService.GetAsync(id);
 
             if (listing == null)
             {
@@ -62,7 +64,7 @@ namespace WebAPI.Controllers.Listing
         }
 
         [HttpPost]
-        public IActionResult AddListing([FromBody] PropertyListing listing, string? imagePath)
+        public async Task<IActionResult> AddListing([FromBody] PropertyListing listing, string? imagePath)
         {
             if (listing == null)
             {
@@ -79,7 +81,7 @@ namespace WebAPI.Controllers.Listing
                 string imageName = Guid.NewGuid().ToString();
                 string fileExtension = Path.GetExtension(imagePath);
 
-                _blobService.UploadFileBlobAsync(imagePath, imageName + fileExtension);
+                await _blobService.UploadFileBlobAsync(imagePath, imageName + fileExtension);
 
                 listing.ImageName = imageName;
             }
@@ -88,7 +90,7 @@ namespace WebAPI.Controllers.Listing
                 listing.ImageName = "default.png";
             }
 
-            _listingService.Add(listing);
+            await _listingService.AddAsync(listing);
 
             return CreatedAtAction(nameof(GetListing), new { id = listing.Id }, null);
         }

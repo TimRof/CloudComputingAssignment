@@ -6,6 +6,6 @@ namespace Repository
 {
     public interface IPropertyListingRepository : IBaseRepository<ListingContext, PropertyListing>
     {
-        IEnumerable<PropertyListing> GetAllByPriceRange(PriceRange priceRange, int page, int pageSize);
+        Task<IEnumerable<PropertyListing>> GetAllByPriceRangeAsync(PriceRange priceRange, int page, int pageSize);
     }
 }

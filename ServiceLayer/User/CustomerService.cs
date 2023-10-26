@@ -1,6 +1,8 @@
-﻿using Entities.Models.Mortgage;
-using Entities.Models.User;
+﻿using Entities.Models.User;
 using Repository;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ServiceLayer.User
 {
@@ -13,20 +15,20 @@ namespace ServiceLayer.User
             _repository = repository;
         }
 
-        public void Add(Customer customer)
+        public async Task AddAsync(Customer customer)
         {
-            _repository.Add(customer);
-            _repository.Commit();
+            _repository.AddAsync(customer);
+            await _repository.CommitAsync();
         }
 
-        public Customer Get(Guid id)
+        public async Task<Customer> GetAsync(Guid id)
         {
-            return _repository.GetSingle(id);
+            return await _repository.GetSingleAsync(id);
         }
 
-        public IEnumerable<Customer> GetAll(int page, int pageSize)
+        public async Task<IEnumerable<Customer>> GetAllAsync(int page, int pageSize)
         {
-            return _repository.GetAll(page, pageSize);
+            return await _repository.GetAllAsync(page, pageSize);
         }
     }
 }
