@@ -17,7 +17,7 @@ namespace Entities.Models.Mortgage
         public DateTime ExpiryTime { get; set; }
         
         [EnumDataType(typeof(ApplicationStatus))]
-        public ApplicationStatus OfferStatus { get; set; } = ApplicationStatus.Pending;
+        public ApplicationStatus OfferStatus { get; set; } = ApplicationStatus.Processed;
 
         public MortgageOffer() { }
     }

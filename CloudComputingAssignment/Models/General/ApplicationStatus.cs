@@ -3,7 +3,8 @@
     public enum ApplicationStatus
     {
         Processing,
-        Pending,
+        Processed,
+        PendingAcceptance,
         Accepted,
         Rejected,
         Expired
