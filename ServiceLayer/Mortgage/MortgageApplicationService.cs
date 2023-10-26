@@ -1,6 +1,9 @@
 ﻿using Entities.Models.General;
 using Entities.Models.Mortgage;
 using Repository.Mortgage;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ServiceLayer.Mortgage
 {
@@ -13,31 +16,31 @@ namespace ServiceLayer.Mortgage
             _repository = repository;
         }
 
-        public void Add(MortgageApplication application)
+        public async Task AddAsync(MortgageApplication application)
         {
-            _repository.Add(application);
-            _repository.Commit();
+            await _repository.AddAsync(application);
+            await _repository.CommitAsync();
         }
 
-        public MortgageApplication Get(Guid id)
+        public async Task<MortgageApplication> GetAsync(Guid id)
         {
-            return _repository.GetSingle(id);
+            return await _repository.GetSingleAsync(id);
         }
 
-        public IEnumerable<MortgageApplication> GetAll(int page, int pageSize)
+        public async Task<IEnumerable<MortgageApplication>> GetAllAsync(int page, int pageSize)
         {
-            return _repository.GetAll(page, pageSize);
+            return await _repository.GetAllAsync(page, pageSize);
         }
 
-        public MortgageApplication GetApplicationByUserId(Guid userId)
+        public async Task<MortgageApplication> GetApplicationByUserIdAsync(Guid userId)
         {
-            return _repository.GetApplicationByUserId(userId);
+            return await _repository.GetApplicationByUserIdAsync(userId);
         }
 
-        public void SetApplicationStatus(Guid id, ApplicationStatus status)
+        public async Task SetApplicationStatusAsync(Guid id, ApplicationStatus status)
         {
-            _repository.SetApplicationStatus(id, status);
-            _repository.Commit();
+            await _repository.SetApplicationStatusAsync(id, status);
+            await _repository.CommitAsync();
         }
     }
 }

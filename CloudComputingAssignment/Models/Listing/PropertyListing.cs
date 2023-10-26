@@ -14,7 +14,6 @@
 
         public string ImageName { get; set; }
 
-
         public PropertyListing()
         { }
     }

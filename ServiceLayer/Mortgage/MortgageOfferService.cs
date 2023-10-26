@@ -2,8 +2,6 @@
 using Repository.Mortgage;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ServiceLayer.Mortgage
@@ -17,27 +15,27 @@ namespace ServiceLayer.Mortgage
             _repository = repository;
         }
 
-        public void Add(MortgageOffer entity)
+        public async Task AddAsync(MortgageOffer entity)
         {
-            _repository.AddMortgageOffer(entity);
+            await _repository.AddMortgageOfferAsync(entity);
         }
 
-        public MortgageOffer GetMortgageOfferByApplicationId(Guid id)
+        public async Task<MortgageOffer> GetMortgageOfferByApplicationIdAsync(Guid id)
         {
-            return _repository.GetMortgageOfferByApplicationId(id);
+            return await _repository.GetMortgageOfferByApplicationIdAsync(id);
         }
 
-        public IEnumerable<MortgageOffer> GetMortgageOffersByUserId(Guid id)
+        public async Task<IEnumerable<MortgageOffer>> GetMortgageOffersByUserIdAsync(Guid id)
         {
-            return _repository.GetMortgageOffersByUserId(id);
+            return await _repository.GetMortgageOffersByUserIdAsync(id);
         }
 
-        public MortgageOffer Get(Guid id)
+        public async Task<MortgageOffer> GetAsync(Guid id)
         {
-           return _repository.GetMortgageOfferById(id);
+            return await _repository.GetMortgageOfferByIdAsync(id);
         }
 
-        public IEnumerable<MortgageOffer> GetAll(int page, int pageSize)
+        public Task<IEnumerable<MortgageOffer>> GetAllAsync(int page, int pageSize)
         {
             throw new NotImplementedException();
         }

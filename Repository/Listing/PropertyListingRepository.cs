@@ -1,8 +1,13 @@
-﻿using Repository.DatabaseContext;
-using Entities;
+﻿using Entities;
 using Entities.Models.General;
 using Entities.Models.Listing;
 using Microsoft.EntityFrameworkCore;
+using Repository.DatabaseContext;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Repository
 {
@@ -11,15 +16,16 @@ namespace Repository
         public PropertyListingRepository(ListingContext listingContext) : base(listingContext)
         {
         }
-        public virtual IEnumerable<PropertyListing> GetAllByPriceRange(PriceRange priceRange, int page, int pageSize)
+
+        public virtual async Task<IEnumerable<PropertyListing>> GetAllByPriceRangeAsync(PriceRange priceRange, int page, int pageSize)
         {
             int skip = (page - 1) * pageSize;
 
-            return _context
-                .Set<PropertyListing>().AsEnumerable()
+            return await _context.Set<PropertyListing>()
                 .Where(p => p.Price >= priceRange.MinPrice && p.Price <= priceRange.MaxPrice)
                 .Skip(skip)
-                .Take(pageSize);
+                .Take(pageSize)
+                .ToListAsync();
         }
     }
 }

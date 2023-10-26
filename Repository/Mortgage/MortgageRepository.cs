@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Repository.Mortgage
@@ -15,39 +14,41 @@ namespace Repository.Mortgage
     {
         public MortgageRepository(MortgageContext mortgageContext) : base(mortgageContext)
         {
-            
         }
 
-        public void AddMortgageOffer(MortgageOffer offer)
+        public async Task AddMortgageOfferAsync(MortgageOffer offer)
         {
             _context.MortgageOffers.Add(offer);
         }
 
-        public MortgageApplication GetApplicationByUserId(Guid userId)
+        public async Task<MortgageApplication> GetApplicationByUserIdAsync(Guid userId)
         {
-            return _context.MortgageApplications.FirstOrDefault(app => app.ApplicantId == userId);
+            return await Task.FromResult(_context.MortgageApplications.FirstOrDefault(app => app.ApplicantId == userId));
         }
 
-        public MortgageOffer GetMortgageOfferByApplicationId(Guid applicationId)
+        public async Task<MortgageOffer> GetMortgageOfferByApplicationIdAsync(Guid applicationId)
         {
-            return _context.MortgageOffers.FirstOrDefault(offer => offer.MortgageApplicationId == applicationId);
+            return await Task.FromResult(_context.MortgageOffers.FirstOrDefault(offer => offer.MortgageApplicationId == applicationId));
         }
 
-        public MortgageOffer GetMortgageOfferById(Guid token)
+        public async Task<MortgageOffer> GetMortgageOfferByIdAsync(Guid token)
         {
-            return _context.MortgageOffers.FirstOrDefault(offer => offer.Id == token);
+            return await Task.FromResult(_context.MortgageOffers.FirstOrDefault(offer => offer.Id == token));
         }
 
-        public IEnumerable<MortgageOffer> GetMortgageOffersByUserId(Guid userId)
+        public async Task<IEnumerable<MortgageOffer>> GetMortgageOffersByUserIdAsync(Guid userId)
         {
-            return _context.MortgageOffers
-            .Where(offer => offer.MortgageApplicationId == GetApplicationByUserId(userId).Id)
-            .AsEnumerable();
+            var application = await GetApplicationByUserIdAsync(userId);
+            return _context.MortgageOffers.Where(offer => offer.MortgageApplicationId == application.Id).AsEnumerable();
         }
 
-        public void SetApplicationStatus(Guid id, ApplicationStatus status)
+        public async Task SetApplicationStatusAsync(Guid id, ApplicationStatus status)
         {
-            _context.MortgageApplications.FirstOrDefault(app => app.Id == id).ApplicationStatus = status;
+            var application = _context.MortgageApplications.FirstOrDefault(app => app.Id == id);
+            if (application != null)
+            {
+                application.ApplicationStatus = status;
+            }
         }
     }
 }

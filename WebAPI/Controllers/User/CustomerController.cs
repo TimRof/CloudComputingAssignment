@@ -1,8 +1,9 @@
 ﻿using Entities.Models.General;
 using Entities.Models.User;
 using Microsoft.AspNetCore.Mvc;
-using ServiceLayer.Listing;
 using ServiceLayer.User;
+using System;
+using System.Threading.Tasks;
 
 namespace WebAPI.Controllers.User
 {
@@ -18,11 +19,11 @@ namespace WebAPI.Controllers.User
         }
 
         [HttpGet]
-        public IActionResult GetCustomers([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        public async Task<IActionResult> GetCustomers([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             try
             {
-                var customers = _customerService.GetAll(page, pageSize);
+                var customers = await _customerService.GetAllAsync(page, pageSize);
                 return Ok(customers);
             }
             catch (Exception ex)
@@ -30,11 +31,11 @@ namespace WebAPI.Controllers.User
                 return StatusCode(500, $"Internal Server Error: {ex.Message}");
             }
         }
-        
+
         [HttpGet("{id:guid}")]
-        public IActionResult GetCustomer(Guid id)
+        public async Task<IActionResult> GetCustomer(Guid id)
         {
-            var customer = _customerService.Get(id);
+            var customer = await _customerService.GetAsync(id);
 
             if (customer == null)
             {
@@ -45,7 +46,7 @@ namespace WebAPI.Controllers.User
         }
 
         [HttpPost]
-        public IActionResult AddCustomer([FromBody] Customer customer)
+        public async Task<IActionResult> AddCustomer([FromBody] Customer customer)
         {
             if (customer == null)
             {
@@ -57,7 +58,7 @@ namespace WebAPI.Controllers.User
                 return BadRequest(ModelState);
             }
 
-            _customerService.Add(customer);
+            await _customerService.AddAsync(customer);
 
             return CreatedAtAction(nameof(GetCustomer), new { id = customer.Id }, null);
         }
