@@ -1,4 +1,5 @@
-﻿using Entities.Models.Listing;
+﻿using Entities.Models.General;
+using Entities.Models.Listing;
 using Entities.Models.Mortgage;
 using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.Mortgage;
@@ -34,6 +35,35 @@ namespace WebAPI.Controllers.User
             {
                 return StatusCode(410, "Offer has expired");
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddMortgageApplication([FromBody] MortgageApplication mortgageApplication)
+        {
+            if (mortgageApplication == null)
+            {
+                return BadRequest("Invalid input data.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            await _mortgageApplicationService.AddAsync(mortgageApplication);
+            return Ok();
+        }
+
+        [HttpPost("status")]
+        public async Task<IActionResult> SetApplicationStatusAsync([FromBody] Guid applicationId, ApplicationStatus applicationStatus)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            await _mortgageApplicationService.SetApplicationStatusAsync(applicationId, applicationStatus);
+            return Ok();
         }
     }
 }
