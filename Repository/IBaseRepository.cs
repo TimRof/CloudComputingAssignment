@@ -28,7 +28,7 @@ namespace Repository
 
         void Delete(T entity);
 
-        void DeleteWhere(Expression<Func<T, bool>> predicate);
+        Task DeleteWhereAsync(Expression<Func<T, bool>> predicate);
 
         Task CommitAsync();
     }

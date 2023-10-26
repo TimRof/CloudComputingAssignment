@@ -84,7 +84,7 @@ namespace Repository
             _context.Entry(entity).State = EntityState.Deleted;
         }
 
-        public virtual void DeleteWhere(Expression<Func<T, bool>> predicate)
+        public virtual async Task DeleteWhereAsync(Expression<Func<T, bool>> predicate)
         {
             IEnumerable<T> entities = _context.Set<T>().Where(predicate);
             foreach (var entity in entities)
