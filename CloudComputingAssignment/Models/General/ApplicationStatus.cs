@@ -3,7 +3,7 @@
     public enum ApplicationStatus
     {
         Processing,
-        Processed,
+        ReadyToSend,
         PendingAcceptance,
         Accepted,
         Rejected,

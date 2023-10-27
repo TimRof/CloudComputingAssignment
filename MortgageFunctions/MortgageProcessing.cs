@@ -1,7 +1,9 @@
 using System;
+using Entities.Models.General;
 using Entities.Models.Mortgage;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
+using ServiceLayer.Email;
 using ServiceLayer.Mortgage;
 
 namespace MortgageFunctions
@@ -10,11 +12,13 @@ namespace MortgageFunctions
     {
         private readonly IMortgageApplicationService<MortgageApplication> _mortgageApplicationService;
         private readonly IMortgageOfferService<MortgageOffer> _mortgageOfferService;
+        private readonly IEmailService _emailService;
 
-        public MortgageProcessing(IMortgageApplicationService<MortgageApplication> mortgageApplicationService, IMortgageOfferService<MortgageOffer> mortgageOfferService)
+        public MortgageProcessing(IMortgageApplicationService<MortgageApplication> mortgageApplicationService, IMortgageOfferService<MortgageOffer> mortgageOfferService, IEmailService emailService)
         {
             _mortgageApplicationService = mortgageApplicationService ?? throw new ArgumentNullException(nameof(mortgageApplicationService));
             _mortgageOfferService = mortgageOfferService ?? throw new ArgumentNullException(nameof(mortgageOfferService));
+            _emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
         }
 
         [FunctionName("DailyMortgageProcessing")]
@@ -25,9 +29,10 @@ namespace MortgageFunctions
                 log.LogInformation($"Starting end of day mortgage applications processing at: {DateTime.Now}.");
 
                 // Get all mortgage applications with Processing status
-                // Calculate Mortgage offer for each application
-                // Save mortgage offer to database
-                // Update mortgage application status to Processed
+                var mortgageApplications = _mortgageApplicationService.GetAllMortgageApplicationsWithStatusProcessingAsync().Result;
+
+                // Make Mortgage offer for each application
+                _mortgageOfferService.CalculateAndMakeMortgageOffers(mortgageApplications);
 
                 log.LogInformation($"End of day mortgage applications processing has ended at: {DateTime.Now}.");
             }
@@ -45,8 +50,16 @@ namespace MortgageFunctions
                 log.LogInformation($"Sending morning email mortgage offers at: {DateTime.Now}.");
 
                 // Get all mortgage offers with status Processing
-                // Send email to each user with the mortgage offer
-                // Update mortgage offer status to PendingAcceptance
+                var mortgageOffers = _mortgageOfferService.GetAllMortgageOffersWithStatusReadyToSendAsync().Result;
+
+                foreach (var offer in mortgageOffers)
+                {
+                    // Send email to each user with the mortgage offer
+                    _emailService.SendMortgageOfferEmail(offer.ApplicantEmail, offer.Id);
+                    
+                    // Update mortgage offer status to PendingAcceptance
+                    _mortgageOfferService.SetMortgageOfferStatusAsync(ApplicationStatus.PendingAcceptance, offer.Id);
+                }
 
                 log.LogInformation($"Morning email mortgage offers done sending at: {DateTime.Now}.");
             }

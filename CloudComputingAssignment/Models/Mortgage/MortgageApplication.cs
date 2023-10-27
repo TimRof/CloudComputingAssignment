@@ -9,6 +9,7 @@ namespace Entities.Models.Mortgage
     {
         public Guid Id { get; set; } = EntityBaseExtensions.GenerateId();
         public Guid ApplicantId { get; set; }
+        public string ApplicantEmail { get; set; }
         public Guid ListingId { get; set; }
         
         [Range(0, double.MaxValue)]

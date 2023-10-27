@@ -51,5 +51,24 @@ namespace Repository.Mortgage
                 application.ApplicationStatus = status;
             }
         }
+
+        public async Task<IEnumerable<MortgageOffer>> GetAllMortgageOffersWithStatusReadyToSendAsync()
+        {
+            return await Task.FromResult(_context.MortgageOffers.Where(app => app.OfferStatus == ApplicationStatus.ReadyToSend).AsEnumerable());
+        }
+
+        public async Task SetMortgageOfferStatusAsync(ApplicationStatus status, Guid id)
+        {
+            var application = _context.MortgageOffers.FirstOrDefault(app => app.Id == id);
+            if (application != null)
+            {
+                application.OfferStatus = status;
+            }
+        }
+
+        public async Task<IEnumerable<MortgageApplication>> GetAllMortgageApplicationsWithStatusProcessingAsync()
+        {
+            return await Task.FromResult(_context.MortgageApplications.Where(app => app.ApplicationStatus == ApplicationStatus.Processing).AsEnumerable());
+        }
     }
 }

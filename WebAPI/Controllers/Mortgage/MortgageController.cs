@@ -21,7 +21,7 @@ namespace WebAPI.Controllers.User
             _mortgageOfferService = mortgageOfferService ?? throw new ArgumentNullException(nameof(mortgageOfferService));
         }
 
-        [HttpGet("{id:guid}")]
+        [HttpGet("offer/{id:guid}")]
         public async Task<IActionResult> GetMortgageOffer(Guid id)
         {
             // Get a mortgage offer if the token is valid and has not expired

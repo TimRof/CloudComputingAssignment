@@ -42,5 +42,10 @@ namespace ServiceLayer.Mortgage
             await _repository.SetApplicationStatusAsync(id, status);
             await _repository.CommitAsync();
         }
+
+        public async Task<IEnumerable<MortgageApplication>> GetAllMortgageApplicationsWithStatusProcessingAsync()
+        {
+            return await _repository.GetAllMortgageApplicationsWithStatusProcessingAsync();
+        }
     }
 }

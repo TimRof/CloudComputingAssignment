@@ -7,5 +7,7 @@ namespace ServiceLayer.Mortgage
     {
         public Task<MortgageApplication> GetApplicationByUserIdAsync(Guid userId);
         public Task SetApplicationStatusAsync(Guid id, ApplicationStatus status);
+
+        public Task<IEnumerable<MortgageApplication>> GetAllMortgageApplicationsWithStatusProcessingAsync();
     }
 }

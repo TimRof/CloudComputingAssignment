@@ -10,10 +10,14 @@ namespace Repository.Mortgage
     public interface IMortgageRepository : IBaseRepository<MortgageContext, MortgageApplication>
     {
         Task<MortgageApplication> GetApplicationByUserIdAsync(Guid userId);
+        Task<IEnumerable<MortgageApplication>> GetAllMortgageApplicationsWithStatusProcessingAsync();
         Task SetApplicationStatusAsync(Guid userId, ApplicationStatus status);
         Task AddMortgageOfferAsync(MortgageOffer offer);
         Task<MortgageOffer> GetMortgageOfferByIdAsync(Guid id);
         Task<MortgageOffer> GetMortgageOfferByApplicationIdAsync(Guid applicationId);
         Task<IEnumerable<MortgageOffer>> GetMortgageOffersByUserIdAsync(Guid userId);
+        Task<IEnumerable<MortgageOffer>> GetAllMortgageOffersWithStatusReadyToSendAsync();
+        Task SetMortgageOfferStatusAsync(ApplicationStatus status, Guid id);
+
     }
 }

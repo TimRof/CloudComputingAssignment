@@ -5,6 +5,7 @@ using Entities.Models.User;
 using Repository;
 using Repository.Mortgage;
 using ServiceLayer.Blob;
+using ServiceLayer.Email;
 using ServiceLayer.Listing;
 using ServiceLayer.Mortgage;
 using ServiceLayer.User;
@@ -35,6 +36,8 @@ builder.Services.AddScoped<IPropertyListingRepository, PropertyListingRepository
 builder.Services.AddScoped<IMortgageApplicationService<MortgageApplication>, MortgageApplicationService>();
 builder.Services.AddScoped<IMortgageOfferService<MortgageOffer>, MortgageOfferService>();
 builder.Services.AddScoped<IMortgageRepository, MortgageRepository>();
+
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 var app = builder.Build();
 
