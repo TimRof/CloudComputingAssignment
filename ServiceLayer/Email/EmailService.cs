@@ -20,19 +20,22 @@ namespace ServiceLayer.Email
     {
         public void SendMortgageOfferEmail(string userEmail, Guid mortgageGuid)
         {
-            // Get Credentials from appsettings.json
+            // Get smtp Credentials from appsettings.json
             var senderEmail = Environment.GetEnvironmentVariable("SMTP_USERNAME");
-            SmtpClient smtpClient = new SmtpClient(Environment.GetEnvironmentVariable("SMTP_SERVER"), 25);
-            smtpClient.Credentials = new NetworkCredential(Environment.GetEnvironmentVariable(senderEmail), Environment.GetEnvironmentVariable("SMTP_PASSWORD"));
+            SmtpClient smtpClient = new(Environment.GetEnvironmentVariable("SMTP_SERVER"), 25)
+            {
+                Credentials = new NetworkCredential(Environment.GetEnvironmentVariable(senderEmail), Environment.GetEnvironmentVariable("SMTP_PASSWORD")),
 
-            smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
-            smtpClient.EnableSsl = true;
-            MailMessage mail = new MailMessage();
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                EnableSsl = true
+            };
 
-            mail.From = new MailAddress(senderEmail);
+            MailMessage mail = new()
+            {
+                From = new MailAddress(senderEmail),
+                Body = $"Your mortgage offer is ready: www.example.com​/api​/Mortgage​/offer​/{mortgageGuid}."
+            };
             mail.To.Add(new MailAddress(userEmail));
-
-            mail.Body = $"Your mortgage offer is ready: www.example.com​/api​/Mortgage​/offer​/{mortgageGuid}.";
 
             smtpClient.Send(mail);
         }

@@ -1,6 +1,7 @@
 ﻿using Entities.Models.General;
 using Entities.Models.Mortgage;
 using Repository.Mortgage;
+using ServiceLayer.Email;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -10,10 +11,12 @@ namespace ServiceLayer.Mortgage
     public class MortgageOfferService : IMortgageOfferService<MortgageOffer>
     {
         private readonly IMortgageRepository _repository;
+        private readonly IEmailService _emailService;
 
-        public MortgageOfferService(IMortgageRepository repository)
+        public MortgageOfferService(IMortgageRepository repository, IEmailService emailService)
         {
             _repository = repository;
+            _emailService = emailService;
         }
 
         public async Task AddAsync(MortgageOffer entity)
@@ -78,6 +81,22 @@ namespace ServiceLayer.Mortgage
         private static (decimal, double) CalculateMortgageOffer(decimal income)
         {
             return (income * 0.4m, 0.05);
+        }
+
+        public async Task StartMorningMortgageProcessing()
+        {
+            // Get all mortgage offers with status Processing
+            var mortgageOffers = await _repository.GetAllMortgageOffersWithStatusReadyToSendAsync();
+
+            foreach (var offer in mortgageOffers)
+            {
+                // Send email to each user with the mortgage offer
+                _emailService.SendMortgageOfferEmail(offer.ApplicantEmail, offer.Id); // Add check if email was sent successfully
+
+                // Update mortgage offer status to PendingAcceptance
+                await _repository.SetMortgageOfferStatusAsync(ApplicationStatus.PendingAcceptance, offer.Id);
+                await _repository.CommitAsync();
+            }
         }
     }
 }

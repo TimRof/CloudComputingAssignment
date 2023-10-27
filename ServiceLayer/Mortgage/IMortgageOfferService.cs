@@ -9,5 +9,7 @@ namespace ServiceLayer.Mortgage
         Task<IEnumerable<MortgageOffer>> GetAllMortgageOffersWithStatusReadyToSendAsync();
 
         Task CalculateAndMakeMortgageOffers(IEnumerable<MortgageApplication> applications);
+
+        Task StartMorningMortgageProcessing();
     }
 }

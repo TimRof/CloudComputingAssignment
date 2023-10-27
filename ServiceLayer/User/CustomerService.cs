@@ -17,7 +17,7 @@ namespace ServiceLayer.User
 
         public async Task AddAsync(Customer customer)
         {
-            _repository.AddAsync(customer);
+            await _repository.AddAsync(customer);
             await _repository.CommitAsync();
         }
 
