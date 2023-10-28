@@ -24,29 +24,15 @@ namespace MortgageFunctions
             _logger = loggerFactory.CreateLogger<MortgageProcessing>();
         }
 
-        [Function("Test")]
-        public void Test([TimerTrigger("* * * * *")] TimerInfo myTimer, ILogger log)
-        {
-            _logger.LogInformation($"Test: {DateTime.Now}.");
-            Test2();
-            _logger.LogInformation($"Test: {DateTime.Now}.");
-        }
-
         [Function("DailyMortgageProcessing")]
-        public void RunDailyMortgageProcessing([TimerTrigger("59 23 * * *")] TimerInfo myTimer)
+        public async Task RunDailyMortgageProcessing([TimerTrigger("59 23 * * *")] TimerInfo myTimer)
         {
             try
             {
                 this._logger.LogInformation($"Starting end of day mortgage applications processing at: {DateTime.Now}.");
 
-                // Get all mortgage applications with Processing status
-                var mortgageApplications = GetApplicationsForProcessingViaAPICall().Result;
-
-                if (mortgageApplications.Any())
-                {
-                    // Make Mortgage offer for each application
-                    CalculateAndMakeMortgageOffersAPICall(mortgageApplications);
-                }
+                // Start mortgage processing through API call
+                await StartDailyMortgageProcessing();
 
                 this._logger.LogInformation($"End of day mortgage applications processing has ended at: {DateTime.Now}.");
             }
@@ -63,7 +49,7 @@ namespace MortgageFunctions
             {
                 _logger.LogInformation($"Sending morning email mortgage offers at: {DateTime.Now}.");
 
-                // Get all mortgage offers with status Processing
+                // Start mortgage processing through API call
                 await StartMorningMortgageProcessing();
 
                 _logger.LogInformation($"Morning email mortgage offers done sending at: {DateTime.Now}.");
@@ -74,49 +60,15 @@ namespace MortgageFunctions
             }
         }
 
-        private async Task CalculateAndMakeMortgageOffersAPICall(IEnumerable<MortgageApplication> applications)
-        {
-            await MakeApiPostRequest("CalculateAndMakeMortgageOffers", applications);
-        }
-
-        private async Task<IEnumerable<MortgageApplication>> GetApplicationsForProcessingViaAPICall()
-        {
-            return await GetApiResponse<MortgageApplication>("StatusProcessing");
-        }
-
         private async Task StartMorningMortgageProcessing()
         {
             await GetApiResponse<MortgageOffer>("StartMorningMortgageProcessing");
         }
-        private async Task Test2()
+        private async Task StartDailyMortgageProcessing()
         {
-            await GetApiResponse<MortgageOffer>("Test");
+            await GetApiResponse<MortgageOffer>("ProcessMortgageOffersFromStorage");
         }
-
-        private async Task MakeApiPostRequest<T>(string endpoint, T contentObject)
-        {
-            using (var httpClient = new HttpClient())
-            {
-                try
-                {
-                    // Serialize the contentObject to JSON
-                    string jsonContent = JsonConvert.SerializeObject(contentObject);
-                    var httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-
-                    // Send POST request to API endpoint
-                    HttpResponseMessage response = await httpClient.PostAsync($"{_apiBaseUrl}/{endpoint}", httpContent);
-
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        _logger.LogError($"API call failed: {response.StatusCode} - {response.ReasonPhrase}");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError($"An error occurred while making the API call: {ex.Message}");
-                }
-            }
-        }
+        
         private async Task<IEnumerable<T>> GetApiResponse<T>(string endpoint)
         {
             using (var httpClient = new HttpClient())

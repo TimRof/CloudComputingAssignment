@@ -108,19 +108,22 @@ namespace WebAPI.Controllers.User
         [HttpGet("StartMorningMortgageProcessing")]
         public async Task<IActionResult> StartMorningMortgageProcessing()
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
+            // Start morning mortgage mail sending
             await _mortgageOfferService.StartMorningMortgageProcessing();
             return Ok();
         }
-
-        [HttpGet("Test")]
-        public async Task<IActionResult> Test()
+        [HttpGet("ProcessMortgageOffersFromStorage")]
+        public async Task<IActionResult> ProcessMortgageOffersFromStorage()
         {
-            Console.WriteLine("TestTestTestTest");
+            // Get all mortgage applications with Processing status
+            var applications = await _mortgageApplicationService.GetAllMortgageApplicationsWithStatusProcessingAsync();
+
+            if (applications.Any())
+            {
+                // Make Mortgage offer for each application
+                await _mortgageOfferService.CalculateAndMakeMortgageOffers(applications);
+            }
+
             return Ok();
         }
 
